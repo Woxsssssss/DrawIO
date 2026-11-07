@@ -37,13 +37,72 @@ Un compañero entregó un diagrama de contexto con estos elementos. Se identific
 - **Error 3:** La flecha Jugador → Game Master conecta dos entidades externas entre sí. Todo flujo debe pasar por el sistema (RPG Manager).
 
 
-EJERCICIO 2A: Generalización de ActoresRespuestas a la Guía¿Hacia dónde apunta el triángulo vacío y por qué?Respuesta: Apunta hacia el actor Jugador (el actor padre o general). En UML, la flecha de generalización con punta de triángulo hueco/vacío siempre señala desde el elemento hijo (específico) hacia el elemento padre (general), indicando la relación de herencia.¿Por qué el Jugador Premium NO necesita líneas a CU-01 … CU-10?Respuesta: Porque gracias a la generalización, el Jugador Premium hereda implícitamente todas las relaciones y asociaciones a los casos de uso que ya posee el actor Jugador. Crear líneas hacia los mismos casos de uso sería redundante e incorrecto en UML.BUG A CORREGIR: Identificación de los 4 ErroresErrorDescripción del BugExplicación / SoluciónError 1Uso de "Inventario" como Caso de Uso.Un caso de uso representa un proceso o funcionalidad, por lo que debe ser un verbo en infinitivo (ej. CU-14 Gestionar inventario), no un sustantivo/entidad.Error 2Actor Game Master dentro del sistema.Los actores representan entidades o roles externos que interactúan con la aplicación. Todos los actores deben dibujarse fuera del rectángulo del límite del sistema.Error 3Dirección invertida en la relación «include».La flecha de inclusión fue trazada de CU-04 a CU-03. Debe apuntar del caso de uso base al incluido (CU-03 Crear personaje $\rightarrow$ CU-04 Elegir clase).Error 4Asociación directa entre Jugador y Game Master.En los diagramas de casos de uso UML, los actores nunca se conectan entre sí. La comunicación siempre ocurre a través de los casos de uso del sistema.Diagrama Corregido y Completo (Mermaid)Nota: GitHub renderiza la siguiente sintaxis mermaid directamente como un diagrama gráfico.graph TD
-    %% Definición de Actores (Fuera del Sistema)
-    subgraph Actores ["Actores Externos"]
-        direction TB
-        J["Jugador"]
-        JP["Jugador Premium"]
-        GM["Game Master"]
+
+# EJERCICIO 2A: Generalización de Actores
+
+## Respuestas a las preguntas
+
+**1. ¿Hacia dónde apunta el triángulo vacío y por qué?**
+
+Respuesta: Apunta hacia el actor Jugador (el actor padre o general). En UML, la flecha de generalización con punta de triángulo hueco señala desde el elemento hijo (específico) hacia el elemento padre (general), indicando la relación de herencia.
+
+**2. ¿Por qué el Jugador Premium NO necesita líneas a CU-01 … CU-10?**
+
+Respuesta: Porque gracias a la generalización, el Jugador Premium hereda automáticamente todas las relaciones y asociaciones a los casos de uso que ya posee el actor Jugador. Trazar líneas repetidas hacia los mismos casos de uso sería redundante en UML.
+
+## BUG A CORREGIR: Identificación de errores
+
+| # | Error identificado | Descripción y solución |
+|---|---|---|
+| 1 | Uso de "Inventario" como Caso de Uso | Un caso de uso representa una acción, por lo que debe nombrarse con un verbo en infinitivo (ej. CU-14 Gestionar inventario), no como un sustantivo. |
+| 2 | Actor Game Master dentro del sistema | Los actores representan entidades externas al sistema. Todos los actores deben graficarse fuera del rectángulo del límite del sistema. |
+| 3 | Dirección invertida en la relación «include» | La inclusión apuntaba de CU-04 a CU-03. Debe apuntar siempre del caso de uso base al caso de uso incluido (CU-03 Crear personaje → CU-04 Elegir clase). |
+| 4 | Asociación directa entre Jugador y Game Master | En UML, los actores nunca se conectan directamente entre sí. La comunicación debe realizarse a través de los casos de uso del sistema. |
+
+## Diagrama de Casos de Uso (Mermaid UML)
+
+```mermaid
+graph LR
+    %% Actores
+    subgraph Actores ["Actores"]
+        J[Jugador]
+        JP[Jugador Premium]
+        GM[Game Master]
     end
 
-Especificaciones Técnicas del Diseño CorregidoJerarquía de Actores: Jugador Premium $\rightarrow$ Jugador mediante herencia vacía.Límite del Sistema (System Boundary): Define formalmente qué partes son internas de la aplicación y separa a todos los actores fuera de este contenedor.Estándares de Asociación: Líneas simples sin punta para asociaciones actor-caso de uso, y líneas punteadas dirigidas únicamente para estereotipos «include» o «extend».
+    %% Generalización entre actores
+    JP -- "Generalización" --> J
+
+    %% Límite del Sistema
+    subgraph Sistema ["RPG Manager"]
+        CU01((CU-01 Iniciar sesión))
+        CU03((CU-03 Crear personaje))
+        CU04((CU-04 Elegir clase))
+        CU10((CU-10 Unirse a partida))
+        CU13((CU-13 Comprar ítem exclusivo))
+        CU14((CU-14 Gestionar inventario))
+        CU15((CU-15 Administrar partida))
+    end
+
+    %% Asociaciones
+    J --- CU01
+    J --- CU03
+    J --- CU10
+    J --- CU14
+
+    %% Relación Include
+    CU03 -. "«include»" .-> CU04
+
+    %% Asociación Jugador Premium
+    JP --- CU13
+
+    %% Asociación Game Master
+    GM --- CU15
+```
+
+## Resumen de reglas de diagramación aplicadas
+
+- **Actores fuera del límite:** Los actores se ubican fuera del recuadro principal del sistema.
+- **Asociaciones:** Representadas mediante líneas continuas sin flechas entre actor y caso de uso.
+- **Estereotipo Include:** Representado por una línea punteada orientada desde el caso de uso base (CU-03) hacia el caso de uso incluido (CU-04).
+- **Herencia:** El Jugador Premium conserva el acceso a todas las funcionalidades del Jugador base más su caso de uso exclusivo (CU-13).
