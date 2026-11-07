@@ -59,48 +59,6 @@ Respuesta: Porque gracias a la generalización, el Jugador Premium hereda autom�
 | 3 | Dirección invertida en la relación «include» | La inclusión apuntaba de CU-04 a CU-03. Debe apuntar siempre del caso de uso base al caso de uso incluido (CU-03 Crear personaje → CU-04 Elegir clase). |
 | 4 | Asociación directa entre Jugador y Game Master | En UML, los actores nunca se conectan directamente entre sí. La comunicación debe realizarse a través de los casos de uso del sistema. |
 
-## Diagrama de Casos de Uso (Mermaid UML)
-
-```mermaid
-graph LR
-    %% Actores
-    subgraph Actores ["Actores"]
-        J[Jugador]
-        JP[Jugador Premium]
-        GM[Game Master]
-    end
-
-    %% Generalización entre actores
-    JP -- "Generalización" --> J
-
-    %% Límite del Sistema
-    subgraph Sistema ["RPG Manager"]
-        CU01((CU-01 Iniciar sesión))
-        CU03((CU-03 Crear personaje))
-        CU04((CU-04 Elegir clase))
-        CU10((CU-10 Unirse a partida))
-        CU13((CU-13 Comprar ítem exclusivo))
-        CU14((CU-14 Gestionar inventario))
-        CU15((CU-15 Administrar partida))
-    end
-
-    %% Asociaciones
-    J --- CU01
-    J --- CU03
-    J --- CU10
-    J --- CU14
-
-    %% Relación Include
-    CU03 -. "«include»" .-> CU04
-
-    %% Asociación Jugador Premium
-    JP --- CU13
-
-    %% Asociación Game Master
-    GM --- CU15
-```
-
-## Resumen de reglas de diagramación aplicadas
 
 - **Actores fuera del límite:** Los actores se ubican fuera del recuadro principal del sistema.
 - **Asociaciones:** Representadas mediante líneas continuas sin flechas entre actor y caso de uso.
